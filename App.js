@@ -3,11 +3,11 @@ import { useState,useRef, Suspense, useLayoutEffect } from 'react';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader';
 import {MTLLoader} from 'three/examples/jsm/loaders/MTLLoader';
 import {TextureLoader} from 'expo-three';
+import { useAnimatedSensor,SensorType } from 'react-native-reanimated';
 
 function Box(props){
   const [active,setActive]=useState(false);
-  const mesh=useRef();
-  
+
   useFrame((state,delta)=>{
     if(active){
     mesh.current.rotation.x+=delta
@@ -47,20 +47,31 @@ function Car(props){
   }
   );
 
+  const mesh=useRef();
+
   useLayoutEffect(()=>{
     obj.traverse((child)=>{
       if(child instanceof THREE.Mesh){
         child.material.map=base;
+        child.material.normalMap=normal;
+        child.material.roughnessMap=rough;
       }
     })
-  },[obj])
+  },[obj]);
+
+  useFrame((state,delta)=>{
+    
+    mesh.current.rotation.y += delta;
+  });
+
   return(
-   <mesh rotation={[1,0,0]}>
-    <primitive object={obj} scale={10}/>
+   <mesh ref={mesh} rotation={[0.7,0,0]}>
+    <primitive object={obj} scale={15}/>
   </mesh>
   );
 }
 export default function App() {
+  
   return( 
   <Canvas>
     <ambientLight/>
