@@ -46,7 +46,7 @@ function Car(props){
     loader.setCrossOrigin([0,2,5])
   }
   );
-
+//created animation of the shoe
   const mesh=useRef();
 
   useLayoutEffect(()=>{
